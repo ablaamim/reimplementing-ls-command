@@ -10,6 +10,23 @@ void   print_args(t_arguements *args)
     printf("num_files: %d\n", args->num_files);
 }
 
+void print_list(t_directory *dir)
+{
+    t_directory *tmp = dir;
+
+    if (tmp == NULL)
+    {
+        printf("No files\n");
+        return ;
+    }
+
+    while (tmp != NULL)
+    {
+        printf("name: %s\n", tmp->name);
+        tmp = tmp->next;
+    }
+}
+
 int parser(int argc, char *argv[], t_arguements args, t_directory *dir)
 {
     // printf("argc: %d\n", argc);
@@ -46,11 +63,12 @@ int parser(int argc, char *argv[], t_arguements args, t_directory *dir)
         }
         else
         {
+            //printf("argv[i]: %s\n", argv[i]);
             // Add the file to the linked list
             t_directory *new_dir = (t_directory *)malloc(sizeof(t_directory));
             if (new_dir == NULL)
             {
-                perror("malloc");
+                perror("malloc failed\n");
                 return (1);
             }
             new_dir->name = argv[i];
@@ -61,6 +79,7 @@ int parser(int argc, char *argv[], t_arguements args, t_directory *dir)
         i++;
     }
     print_args(&args);
+    print_list(dir);
     return (0);
 }
 
@@ -74,7 +93,7 @@ int main(int argc, char *argv[])
     args = (t_arguements *)malloc(sizeof(t_arguements));
     if (args == NULL)
     {
-        perror("malloc");
+        perror("malloc failed\n");
         return (EXIT_FAILURE);
     }
     // Initialize the arguments
@@ -86,5 +105,6 @@ int main(int argc, char *argv[])
     args->num_files = 0;
     //print_args(args);
     return_args = parser(argc, argv, *args, dir);
+    //print_list(dir);
     return (EXIT_SUCCESS);
 }
